@@ -32,5 +32,15 @@
 	"scripts": {
 		"test": "vendor/bin/phpunit",
 		"test-coverage": "vendor/bin/phpunit --coverage-html coverage"
-	}
+	},
+	"funding": [
+        {
+            "type": "kofi",
+            "url": "https://ko-fi.com/ssddanbrown"
+        },
+        {
+            "type": "github",
+            "url": "https://github.com/sponsors/ssddanbrown"
+        }
+    ]
 }
