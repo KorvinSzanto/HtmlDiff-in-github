@@ -1,13 +1,13 @@
 {
     "name": "ssddanbrown/htmldiff",
     "description": "HTML Content Diff Generator",
-	"homepage": "https://github.com/ssddanbrown/htmldiff",
+	"homepage": "https://codeberg.org/danb/HtmlDiff",
 	"license": "MIT",
 	"type": "library",
 	"authors": [
         {
             "name": "Dan Brown",
-            "email": "ssddanbrown@googlemail.com",
+            "homepage": "https://danb.me",
 			"role": "Developer"
         }
     ],

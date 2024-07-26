@@ -1,6 +1,5 @@
 # PHP HtmlDiff
 
-[![Build Status](https://github.com/ssddanbrown/htmldiff/workflows/phpunit/badge.svg)](https://github.com/ssddanbrown/htmldiff/actions)
 [![Latest Stable Version](https://poser.pugx.org/ssddanbrown/htmldiff/v)](https://packagist.org/packages/ssddanbrown/htmldiff)
 [![Total Downloads](https://poser.pugx.org/ssddanbrown/htmldiff/downloads)](https://packagist.org/packages/ssddanbrown/htmldiff)
 
@@ -83,5 +82,5 @@ This package is built to very closely follow the code and structure of the [c#](
 
 ## License
 
-This project, and the projects that this library has been ported from, is licensed under the MIT License. See the [license file](https://github.com/ssddanbrown/htmldiff/blob/master/license.md) for more info.
+This project, and the projects that this library has been ported from, is licensed under the MIT License. See the [license file](https://codeberg.org/danb/HtmlDiff/src/branch/main/license.md) for more info.
 
