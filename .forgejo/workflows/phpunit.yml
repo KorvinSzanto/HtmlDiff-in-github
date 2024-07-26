@@ -30,6 +30,8 @@ jobs:
 
       - name: Install dependencies
         run: composer install --prefer-dist --no-interaction --no-suggest
+        env:
+          COMPOSER_AUTH: '{"github-oauth": {"github.com": "${{ secrets.GH_TOKEN }}"}}'
 
       - name: Execute tests
         run: vendor/bin/phpunit
