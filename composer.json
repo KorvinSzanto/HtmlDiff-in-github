@@ -29,6 +29,10 @@
 			"Ssddanbrown\\HtmlDiff\\Tests\\": "tests"
 		}
 	},
+	"dist": {
+		"type": "zip",
+		"url": "https://codeberg.org/api/v1/repos/danb/HtmlDiff/archive/%version%.zip"
+	},
 	"scripts": {
 		"test": "vendor/bin/phpunit",
 		"test-coverage": "vendor/bin/phpunit --coverage-html coverage"
