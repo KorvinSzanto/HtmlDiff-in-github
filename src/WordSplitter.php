@@ -199,17 +199,13 @@ class WordSplitter
 
     /**
      * Finds any blocks that need to be grouped.
-     * @param string[]|null $blockExpressions
+     * @param string[] $blockExpressions
      * @return array<int, int>
      */
-    private static function findBlocks(string $text, array $blockExpressions = null): array
+    private static function findBlocks(string $text, array $blockExpressions): array
     {
         /** @var array<int, int> $blockLocations */
         $blockLocations = [];
-
-        if (is_null($blockExpressions)) {
-            return $blockLocations;
-        }
 
         foreach ($blockExpressions as $exp) {
             $matches = [];
