@@ -31,7 +31,7 @@
 	},
 	"dist": {
 		"type": "zip",
-		"url": "https://codeberg.org/api/v1/repos/danb/HtmlDiff/archive/%version%.zip"
+		"url": "https://codeberg.org/api/v1/repos/danb/HtmlDiff/archive/%prettyVersion%.zip"
 	},
 	"scripts": {
 		"test": "vendor/bin/phpunit",
