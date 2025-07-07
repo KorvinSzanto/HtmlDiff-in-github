@@ -25,7 +25,7 @@ class Utils
     /**
      * @var string
      */
-    private static $wordRegex = '/[\w\#@]+/';
+    private static $wordRegex = '/[\w\#@]+/u';
 
     /**
      * @var string[]

@@ -6,7 +6,7 @@ class WordSplitter
 {
 
     /**
-     * Converts Html text into a list of words
+     * Converts HTML text into a list of words
      * @throws Exception
      * @param string[] $blockExpressions
      * @return string[]
@@ -24,6 +24,7 @@ class WordSplitter
 
         $length = strlen($text);
         $mbCharLength = 0;
+        $lastCharSize = 1;
         $character = "";
         for ($index = 0; $index < $length; $index++)
         {
@@ -77,27 +78,32 @@ class WordSplitter
                             $words[] = $currentWord;
                         }
                         $currentWord = "<";
+                        $lastCharSize = 1;
                         $mode = Mode::TAG;
                     } else if (Utils::isStartOfEntity($character)) {
                         if (strlen($currentWord) !== 0) {
                             $words[] = $currentWord;
                         }
                         $currentWord = $character;
+                        $lastCharSize = strlen($character);
                         $mode = Mode::ENTITY;
                     } else if (Utils::isWhiteSpace($character)) {
                         if (strlen($currentWord) !== 0) {
                             $words[] = $currentWord;
                         }
                         $currentWord = $character;
+                        $lastCharSize = strlen($character);
                         $mode = Mode::WHITESPACE;
                     } else if (Utils::isWord($character) &&
-                        (strlen($currentWord) === 0) || Utils::isWord(substr($currentWord, -1))) {
+                        (strlen($currentWord) === 0) || Utils::isWord(substr($currentWord, 0 - $lastCharSize))) {
                         $currentWord .= $character;
+                        $lastCharSize = strlen($character);
                     } else {
                         if (strlen($currentWord) !== 0) {
                             $words[] = $currentWord;
                         }
                         $currentWord = $character;
+                        $lastCharSize = strlen($character);
                     }
 
                     break;
@@ -107,10 +113,11 @@ class WordSplitter
                         $currentWord .= $character;
                         $words[] = $currentWord;
                         $currentWord = "";
-
+                        $lastCharSize = 0;
                         $mode = Utils::isWhiteSpace($character) ? Mode::WHITESPACE : Mode::CHARACTER;
                     } else {
                         $currentWord .= $character;
+                        $lastCharSize = strlen($character);
                     }
 
                     break;
@@ -122,20 +129,24 @@ class WordSplitter
                             $words[] = $currentWord;
                         }
                         $currentWord = $character;
+                        $lastCharSize = strlen($character);
                         $mode = Mode::TAG;
                     } else if (Utils::isStartOfEntity($character)) {
                         if (strlen($currentWord) !== 0) {
                             $words[] = $currentWord;
                         }
                         $currentWord = $character;
+                        $lastCharSize = strlen($character);
                         $mode = Mode::ENTITY;
                     } else if (Utils::isWhiteSpace($character)) {
                         $currentWord .= $character;
+                        $lastCharSize = strlen($character);
                     } else {
                         if (strlen($currentWord) !== 0) {
                             $words[] = $currentWord;
                         }
                         $currentWord = $character;
+                        $lastCharSize = strlen($character);
                         $mode = Mode::CHARACTER;
                     }
 
@@ -148,17 +159,20 @@ class WordSplitter
                             $words[] = $currentWord;
                         }
                         $currentWord = $character;
+                        $lastCharSize = strlen($character);
                         $mode = Mode::TAG;
                     } else if (Utils::isWhiteSpace($character)) {
                         if (strlen($currentWord) !== 0) {
                             $words[] = $currentWord;
                         }
                         $currentWord = $character;
+                        $lastCharSize = strlen($character);
                         $mode = Mode::WHITESPACE;
                     } else if (Utils::isEndOfEntity($character)) {
                         $switchToNextMode = true;
                         if (strlen($currentWord) !== 0) {
                             $currentWord .= $character;
+                            $lastCharSize = strlen($character);
                             $words[] = $currentWord;
 
                             //join &nbsp; entity with last whitespace
@@ -175,15 +189,18 @@ class WordSplitter
                         }
                         if ($switchToNextMode) {
                             $currentWord = "";
+                            $lastCharSize = 0;
                             $mode = Mode::CHARACTER;
                         }
                     } else if (Utils::isWord($character)) {
                         $currentWord .= $character;
+                        $lastCharSize = strlen($character);
                     } else {
                         if (strlen($currentWord) !== 0) {
                             $words[] = $currentWord;
                         }
                         $currentWord = $character;
+                        $lastCharSize = strlen($character);
                         $mode = Mode::CHARACTER;
                     }
                     break;
