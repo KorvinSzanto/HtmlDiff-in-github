@@ -55,9 +55,23 @@ class Diff
     /**
      * Tracks opening and closing formatting tags to ensure that we don't
      * inadvertently generate invalid html during the diff process.
+     * Separate stacks for delete and insert operations to handle cases
+     * where different but semantically similar tags are compared (e.g., <b> vs <strong>).
      * @var string[]
      */
-    private $specialTagDiffStack = [];
+    private $deleteSpecialTagStack = [];
+
+    /**
+     * @var string[]
+     */
+    private $insertSpecialTagStack = [];
+
+    /**
+     * Flag to track when processing a REPLACE operation.
+     * When true, DELETE skips special tag injection (only INSERT injects).
+     * @var bool
+     */
+    private $inReplaceOperation = false;
 
     /**
      * @var string[]
@@ -183,8 +197,10 @@ class Diff
 
     private function processReplaceOperation(Operation $operation): void
     {
+        $this->inReplaceOperation = true;
         $this->processDeleteOperation($operation, "diffmod");
         $this->processInsertOperation($operation, "diffmod");
+        $this->inReplaceOperation = false;
     }
 
     private function processInsertOperation(Operation $operation, string $cssClass): void
@@ -222,6 +238,12 @@ class Diff
      */
     private function insertTag(string $tag, string $cssClass, array $words): void
     {
+        if ($tag === "del") {
+            $stack = &$this->deleteSpecialTagStack;
+        } else {
+            $stack = &$this->insertSpecialTagStack;
+        }
+
         while(true) {
             if (count($words) === 0) {
                 break;
@@ -239,9 +261,14 @@ class Diff
                 $this->content .= $text;
             } else {
                 // Check if the tag is a special case
+                // In REPLACE operations, only INSERT injects wrappers to avoid nesting issues
+                $skipInjection = $this->inReplaceOperation && $tag === "del";
+
                 if (preg_match(static::$specialCaseOpeningTagRegex, $words[0]) === 1) {
-                    $this->specialTagDiffStack[] = $words[0];
-                    $specialCaseTagInjection = "<ins class=\"mod\">";
+                    if (!$skipInjection) {
+                        $stack[] = $words[0];
+                        $specialCaseTagInjection = "<ins class=\"mod\">";
+                    }
                     if ($tag === "del") {
                         array_shift($words);
 
@@ -251,14 +278,15 @@ class Diff
                         }
                     }
                 } else if (isset(static::$specialCaseClosingTags[strtolower($words[0])])) {
-                    $openingTag = count($this->specialTagDiffStack) === 0 ? null : array_pop($this->specialTagDiffStack);
+                    if (!$skipInjection) {
+                        $openingTag = count($stack) === 0 ? null : array_pop($stack);
 
-                    // If we didn't have an opening tag, and we don't have a match with the previous tag used
-                    if (is_null($openingTag) || $openingTag !== str_replace('/', '', end($words))) {
-                        // Do nothing
-                    } else {
-                        $specialCaseTagInjection = "</ins>";
-                        $specialCaseTagInjectionIsBefore = true;
+                        // If we didn't have an opening tag, and we don't have a match with the previous tag used
+                        // Use end($words) to get the outermost closing tag for proper nesting
+                        if (!is_null($openingTag) && $openingTag === str_replace('/', '', end($words))) {
+                            $specialCaseTagInjection = "</ins>";
+                            $specialCaseTagInjectionIsBefore = true;
+                        }
                     }
 
                     if ($tag === "del") {

@@ -122,4 +122,15 @@ class HtmlDiffTest extends TestCase
         $output = Diff::excecute("AAA BBB CCC", "ZZZ BBB YYY");
         $this->assertEquals('<del class="diffmod">AAA</del><ins class="diffmod">ZZZ</ins> BBB <del class="diffmod">CCC</del><ins class="diffmod">YYY</ins>', $output);
     }
+
+    public function test_replace_formatting_tags_produces_valid_html()
+    {
+        // When replacing formatting tags (e.g., <b> with <strong>), the output should be valid HTML
+        $diff = new \Ssddanbrown\HtmlDiff\Diff('<div><b>bold text</b></div>', '<div><strong>bold text</strong></div>');
+        $diff->repeatingWordsAccuracy = 1;
+        $diff->ignoreWhitespaceDifferences = true;
+        $diff->orphanMatchThreshold = 0.2;
+        $output = $diff->build();
+        $this->assertEquals('<div><strong><ins class="mod">bold text</ins></strong></div>', $output);
+    }
 }
