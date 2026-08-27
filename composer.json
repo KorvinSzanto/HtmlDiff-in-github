@@ -1,5 +1,5 @@
 {
-    "name": "ssddanbrown/htmldiff",
+    "name": "korvin/htmldiff-gh-fork",
     "description": "HTML Content Diff Generator",
 	"homepage": "https://codeberg.org/danb/HtmlDiff",
 	"license": "MIT",
@@ -11,6 +11,9 @@
 			"role": "Developer"
         }
     ],
+    "replace": {
+        "ssddanbrown/htmldiff": "*"
+    },
     "require": {
 		"php": ">=8.0",
 		"ext-mbstring": "*"
